@@ -1,0 +1,74 @@
+{
+  "072dcb71-9d2c-4542-8ed3-d21e9691c711": {
+    "appActions": [
+      "providers/PowerPlatform.Governance/Operations/Read"
+    ],
+    "connectionRef": {
+      "apiTier": "Standard",
+      "displayName": "SharePoint",
+      "iconUri": "https://connectoricons-prod.azureedge.net/releases/v1.0.1656/1.0.1656.3432/sharepointonline/icon.png",
+      "id": "/providers/microsoft.powerapps/apis/shared_sharepointonline",
+      "parameterHints": {},
+      "parameterHintsV2": {}
+    },
+    "datasets": {
+      "https://5ssml2.sharepoint.com/sites/PowerPlatformTestSite": {
+        "dataSources": {
+          "Documents": {
+            "tableName": "5fb6c2a3-8a52-472b-8853-856d6973eeab"
+          },
+          "SharePoint Pets": {
+            "tableName": "ea96e387-790d-4634-ad6c-afcab374f471"
+          }
+        }
+      }
+    },
+    "dataSources": [
+      "SharePoint Pets",
+      "Documents"
+    ],
+    "dependencies": {},
+    "dependents": [
+      "0a81d262-28bf-4137-8fb8-5f54816b9421"
+    ],
+    "id": "072dcb71-9d2c-4542-8ed3-d21e9691c711"
+  },
+  "0a81d262-28bf-4137-8fb8-5f54816b9421": {
+    "appActions": [
+      "Run"
+    ],
+    "connectionRef": {
+      "apiTier": "Standard",
+      "displayName": "Logic flows",
+      "iconUri": "https://connectoricons-prod.azureedge.net/releases/v1.0.1653/1.0.1653.3403/logicflows/icon.png",
+      "id": "/providers/microsoft.powerapps/apis/shared_logicflows",
+      "parameterHints": {
+        "072dcb71-9d2c-4542-8ed3-d21e9691c711": {
+          "value": "shared_sharepointonline"
+        },
+        "workflowEntityId": {},
+        "workflowName": {
+          "value": "4a508aad-057d-427d-bd3c-4b0f179c9791"
+        }
+      },
+      "parameterHintsV2": {
+        "shared_sharepointonline": {
+          "value": "072dcb71-9d2c-4542-8ed3-d21e9691c711"
+        },
+        "workflowEntityId": {},
+        "workflowName": {
+          "value": "4a508aad-057d-427d-bd3c-4b0f179c9791"
+        }
+      }
+    },
+    "datasets": {},
+    "dataSources": [
+      "UploadFileSharepoint"
+    ],
+    "dependencies": {
+      "shared_sharepointonline": "072dcb71-9d2c-4542-8ed3-d21e9691c711"
+    },
+    "dependents": [],
+    "id": "0a81d262-28bf-4137-8fb8-5f54816b9421"
+  }
+}

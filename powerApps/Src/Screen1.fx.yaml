@@ -1,0 +1,209 @@
+Screen1 As screen:
+
+    AttachmentControl As attachments:
+        AddAttachmentText: =
+        BorderColor: =Color.Black
+        Fill: =Color.Transparent
+        Height: =184
+        IsInDataCard: =true
+        Items: =
+        MaxAttachments: =1
+        NoAttachmentsText: ="Only images png/jpg"
+        OnAddFile: |-
+            =Set(varExtension, Last(
+                    Split(
+                        Last(AttachmentControl.Attachments).Name,
+                        "."
+                    )
+                ).Value);
+            
+            If(
+               varExtension = "jpg" Or varExtension = "png",
+                Set(
+                    VarContainsIMAGE,
+                    true
+                );
+                AttachmentControl.NoAttachmentsText = "";
+                AttachmentControl.AddAttachmentText = "",
+                Set(
+                    VarContainsIMAGE,
+                    false
+                );
+                AttachmentControl.NoAttachmentsText = "Selecione Imagen jpg/png";
+                AttachmentControl.AddAttachmentText = "Selecione Imagen jpg/png"
+            )
+        PaddingBottom: =5
+        PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+        PaddingRight: =5
+        PaddingTop: =5
+        Tooltip: =
+        Width: =426
+        X: =432
+        Y: =4
+        ZIndex: =2
+
+    Image1 As image:
+        Height: =492
+        Image: =If(!IsBlank(Last(AttachmentControl.Attachments).Value) And VarContainsIMAGE,Last(AttachmentControl.Attachments).Value, R)
+        ImagePosition: =ImagePosition.Fill
+        Width: =489
+        X: =877
+        Y: =4
+        ZIndex: =3
+
+    Button2 As button:
+        OnSelect: |-
+            =Launch("https://5ssml2.sharepoint.com/sites/PowerPlatformTestSite/Shared%20Documents/Forms/AllItems.aspx")
+        Text: ="View file"
+        X: =1187
+        Y: =708
+        ZIndex: =5
+
+    DataTable1 As dataTable.datatable:
+        BorderStyle: =BorderStyle.Solid
+        DisplayMode: =DisplayMode.Edit
+        Fill: =RGBA(0, 0, 0, 0)
+        Height: =170
+        Items: =Split(varFileLink.filelink, ";")
+        Width: =681
+        X: =404
+        Y: =570
+        ZIndex: =6
+
+        Value_Column2 As dataTableColumn.textualColumn:
+            AutoWidth: =false
+            DisplayMode: =DisplayMode.Edit
+            FieldDisplayName: ="Path/Id/ItemId"
+            FieldName: ="Value"
+            FieldVariantName: ="textualColumn"
+            Height: =198
+            LayoutHeight: =Parent.Height
+            Order: =1
+            Text: =
+            Width: =683
+            X: =144
+            Y: =152
+            ZIndex: =1
+
+    "Gallery1 As gallery.'BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0'":
+        DelayItemLoading: =true
+        Height: =442
+        Items: =Documents
+        Layout: =Layout.Vertical
+        LoadingSpinner: =LoadingSpinner.Data
+        TabIndex: =0
+        TemplatePadding: =0
+        TemplateSize: =104
+        Width: =378
+        X: =40
+        Y: =40
+        ZIndex: =7
+
+        Image2 As image:
+            Height: =72
+            Image: =ThisItem.Thumbnail.Small
+            OnSelect: =Select(Parent)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Width: =72
+            X: =16
+            Y: =(Parent.TemplateHeight / 2) - (Self.Height / 2)
+            ZIndex: =1
+
+        Title1 As label:
+            FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+            Height: =Self.Size * 1.8
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Text: =ThisItem.Name
+            VerticalAlign: =VerticalAlign.Top
+            Width: =Parent.TemplateWidth - 173
+            X: =103
+            Y: =(Parent.TemplateHeight - (Self.Size * 1.8 + Subtitle1.Size * 1.8)) / 2
+            ZIndex: =2
+
+        Subtitle1 As label:
+            FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+            Height: =Self.Size * 1.8
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Text: =ThisItem.Modified
+            VerticalAlign: =VerticalAlign.Top
+            Width: =Title1.Width
+            X: =Title1.X
+            Y: =Title1.Y + Title1.Height
+            ZIndex: =3
+
+        NextArrow1 As icon.ChevronRight:
+            AccessibleLabel: =Self.Tooltip
+            Color: =RGBA(166, 166, 166, 1)
+            Height: =50
+            Icon: =Icon.ChevronRight
+            OnSelect: =Select(Parent)
+            PaddingBottom: =16
+            PaddingLeft: =16
+            PaddingRight: =16
+            PaddingTop: =16
+            Tooltip: ="View item details"
+            Width: =50
+            X: =Parent.TemplateWidth - Self.Width - 12
+            Y: =(Parent.TemplateHeight / 2) - (Self.Height / 2)
+            ZIndex: =4
+
+        Separator1 As rectangle:
+            Height: =8
+            OnSelect: =Select(Parent)
+            Width: =Parent.TemplateWidth
+            Y: =Parent.TemplateHeight - Self.Height
+            ZIndex: =5
+
+        Rectangle1 As rectangle:
+            Height: =Parent.TemplateHeight - Separator1.Height
+            OnSelect: =Select(Parent)
+            Visible: =ThisItem.IsSelected
+            Width: =4
+            ZIndex: =6
+
+    Button1 As button:
+        DisplayMode: |
+            =If(VarContainsIMAGE, DisplayMode.Edit, DisplayMode.Disabled)
+        OnSelect: |-
+            =If(VarContainsIMAGE,
+            
+            Set(varImageJSON, JSON(Image1.Image, JSONFormat.IncludeBinaryData));
+            
+            Set(varImageB64, Mid(varImageJSON, Find(",", varImageJSON) + 1, Len(varImageJSON) - Find(",",varImageJSON) - 1) );
+            
+            Set(varFileLink, UploadFileSharepoint.Run(Last(AttachmentControl.Attachments).Name, varImageB64));
+            
+            Reset(AttachmentControl);
+            
+            AttachmentControl.NoAttachmentsText = "";
+            
+            AttachmentControl.AddAttachmentText = "",
+            
+            AttachmentControl.NoAttachmentsText = "Selecione Imagen jpg/png";
+            
+            AttachmentControl.AddAttachmentText = "Selecione Imagen jpg/png")
+        Text: ="Upload image"
+        X: =1187
+        Y: =575
+        ZIndex: =8
+
+    Label1 As label:
+        Height: =126
+        Text: |-
+            ="File extension: " & varExtension & Char(10) & "File is image: " & VarContainsIMAGE
+        Width: =297
+        X: =20
+        Y: =570
+        ZIndex: =9
+
